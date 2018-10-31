@@ -53,10 +53,9 @@ namespace DutchTreatTwo.Controllers
       }
 
       [Authorize]
-      public async Task<IActionResult> Shop()
+      public IActionResult Shop()
       {
-         var results = await _dutchRepository.GetAllProducts();
-         return View(results);
+         return View();
       }
    }
 }

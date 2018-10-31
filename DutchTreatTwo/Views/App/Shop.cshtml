@@ -1,27 +1,13 @@
 ﻿@using System.Data
 @model IEnumerable<DutchTreatTwo.Data.Entities.Product>
-@section Scripts {           
-    <script src="~/ts/storecustomer.js"></script>      
-    <script src="~/ts/main.js"></script>
+@section Scripts {
+
+   <script src="~/clientapp/dist/runtime.js"></script>
+   <script src="~/clientapp/dist/polyfills.js"></script>
+   <script src="~/clientapp/dist/styles.js"></script>
+   <script src="~/clientapp/dist/vendor.js"></script>
+   <script src="~/clientapp/dist/main.js"></script>
 }
 
 <h1>Shop</h1>
-<p>Count: @Model.Count()</p>
-<div class="row col-md-12">
-    @foreach (var p in Model)
-    {
-        <div class="col-md-4 col-lg-3">
-            <div class="border bg-light rounded p-1">
-                <img src="~/img/@(p.ArtId).jpg" title="@p.Title" class="img-fluid" />
-                <h3>@p.Category - @p.Size</h3>
-                <ul>
-                    <li>Price: @p.Price.ToString("C2")</li>
-                    <li>Artist: @p.Artist</li>
-                    <li>Title: @p.Title</li>
-                    <li>Description: @p.ArtDescription</li>
-                </ul>
-                <button id="buyButton">Buy</button>
-            </div>
-        </div>
-    }
-</div>
+<the-shop></the-shop>
