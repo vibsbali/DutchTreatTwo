@@ -9,6 +9,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from "@angular/common/http";
 import { AppComponent } from './app.component';
 import { ProductList } from "./shop/productList.component";
+import { Cart } from "./shop/cart.component";
 import { DataService } from "./shared/dataService";
 var AppModule = /** @class */ (function () {
     function AppModule() {
@@ -17,7 +18,8 @@ var AppModule = /** @class */ (function () {
         NgModule({
             declarations: [
                 AppComponent,
-                ProductList
+                ProductList,
+                Cart
             ],
             imports: [
                 BrowserModule,

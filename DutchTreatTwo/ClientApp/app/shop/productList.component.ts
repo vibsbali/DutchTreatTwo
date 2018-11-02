@@ -5,7 +5,7 @@ import { Product } from "../shared/product";
 @Component({
    selector: "product-list",
    templateUrl: "productList.component.html",
-   styleUrls: []
+   styleUrls: [ "productList.component.css" ]
 })
 export class ProductList implements OnInit {
    
@@ -21,6 +21,11 @@ export class ProductList implements OnInit {
                this.products = this.dataService.products;
             }
          });
-   }
+  }
+
+
+  addProduct(product: Product) {
+    this.dataService.addToOrder(product);
+  }
 
 }

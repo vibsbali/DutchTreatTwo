@@ -10,24 +10,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map } from "rxjs/operators";
+import * as OrderNS from "./order";
 var DataService = /** @class */ (function () {
-    //public products = [
-    //   {
-    //      title: "First Product",
-    //      price: 19.99
-    //   },
-    //   {
-    //      title: "Second Product",
-    //      price: 9.99
-    //   },
-    //   {
-    //      title: "Third Product",
-    //      price: 11.99
-    //   }
-    //];
     function DataService(http) {
         this.http = http;
         this.products = [];
+        this.order = new OrderNS.Order();
     }
     DataService.prototype.loadProducts = function () {
         var _this = this;
@@ -36,6 +24,18 @@ var DataService = /** @class */ (function () {
             _this.products = data;
             return true;
         }));
+    };
+    DataService.prototype.addToOrder = function (newProduct) {
+        var item = new OrderNS.OrderItem();
+        item.productId = newProduct.id;
+        item.productArtist = newProduct.artist;
+        item.productArtId = newProduct.artId;
+        item.productCategory = newProduct.category;
+        item.productSize = newProduct.size;
+        item.productTitle = newProduct.title;
+        item.unitPrice = newProduct.price;
+        item.quantity = 1;
+        this.order.items.push(item);
     };
     DataService = __decorate([
         Injectable(),
