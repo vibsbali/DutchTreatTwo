@@ -22,6 +22,9 @@ var ProductList = /** @class */ (function () {
             }
         });
     };
+    ProductList.prototype.addProduct = function (product) {
+        this.dataService.addToOrder(product);
+    };
     ProductList = __decorate([
         Component({
             selector: "product-list",
