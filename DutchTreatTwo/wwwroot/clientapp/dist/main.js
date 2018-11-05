@@ -169,7 +169,12 @@ var DataService = /** @class */ (function () {
         }));
     };
     DataService.prototype.addToOrder = function (newProduct) {
-        var item = new _order__WEBPACK_IMPORTED_MODULE_3__["OrderItem"]();
+        var item = this.order.items.find(function (i) { return i.productId === newProduct.id; });
+        if (item) {
+            item.quantity++;
+            return;
+        }
+        item = new _order__WEBPACK_IMPORTED_MODULE_3__["OrderItem"]();
         item.productId = newProduct.id;
         item.productArtist = newProduct.artist;
         item.productArtId = newProduct.artId;
@@ -202,11 +207,22 @@ var DataService = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Order", function() { return Order; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OrderItem", function() { return OrderItem; });
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "../node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+
 var Order = /** @class */ (function () {
     function Order() {
         this.orderDate = new Date();
         this.items = new Array();
     }
+    Object.defineProperty(Order.prototype, "subtotal", {
+        get: function () {
+            return lodash__WEBPACK_IMPORTED_MODULE_0___default.a.sum(lodash__WEBPACK_IMPORTED_MODULE_0___default.a.map(this.items, function (i) { return i.unitPrice * i.quantity; }));
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ;
     return Order;
 }());
 
@@ -227,7 +243,7 @@ var OrderItem = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h3>Shopping Cart</h3>    \r\n<div>Count: {{ data.order.items.length }} </div>\r\n"
+module.exports = "\r\n<div>\r\n    <h3>Shopping Cart</h3>\r\n    <div>#/Items: {{ data.order.items.length }} </div>\r\n    <div class=\"table-responsive\">\r\n        <table class=\"table\">\r\n            <thead class=\"thead-dark\">\r\n                <tr>\r\n                    <th scope=\"col\">Product</th>\r\n                    <th scope=\"col\">#</th>\r\n                    <th scope=\"col\">$</th>\r\n                    <th scope=\"col\">Total</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor=\"let o of data.order.items\">\r\n                    <td>{{ o.productCategory }} - {{ o.productTitle }}</td>\r\n                    <td>{{ o.quantity }}</td>\r\n                    <td>{{ o.unitPrice | currency:\"AUD\":true }}</td>\r\n                    <td>{{ (o.unitPrice * o.quantity) | currency:\"AUD\":true }}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n    <div>Subtotal: {{ data.order.subtotal }}</div>\r\n</div>"
 
 /***/ }),
 

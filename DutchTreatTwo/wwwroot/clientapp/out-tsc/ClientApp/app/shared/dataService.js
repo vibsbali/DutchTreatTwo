@@ -26,7 +26,12 @@ var DataService = /** @class */ (function () {
         }));
     };
     DataService.prototype.addToOrder = function (newProduct) {
-        var item = new OrderNS.OrderItem();
+        var item = this.order.items.find(function (i) { return i.productId === newProduct.id; });
+        if (item) {
+            item.quantity++;
+            return;
+        }
+        item = new OrderNS.OrderItem();
         item.productId = newProduct.id;
         item.productArtist = newProduct.artist;
         item.productArtId = newProduct.artId;

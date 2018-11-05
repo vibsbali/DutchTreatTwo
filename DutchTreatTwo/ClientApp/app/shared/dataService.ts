@@ -26,7 +26,15 @@ export class DataService {
   }
 
   addToOrder(newProduct: Product) {
-    var item = new OrderNS.OrderItem();
+
+    let item: OrderNS.OrderItem = this.order.items.find(i => i.productId === newProduct.id);
+
+    if (item) {
+      item.quantity++;
+      return;
+    }
+    
+    item = new OrderNS.OrderItem();
     item.productId = newProduct.id;
     item.productArtist = newProduct.artist;
     item.productArtId = newProduct.artId;
