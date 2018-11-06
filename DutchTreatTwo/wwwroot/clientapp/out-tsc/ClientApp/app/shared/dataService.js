@@ -7,13 +7,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map } from "rxjs/operators";
 import * as OrderNS from "./order";
 var DataService = /** @class */ (function () {
     function DataService(http) {
         this.http = http;
+        this.token = "";
         this.products = [];
         this.order = new OrderNS.Order();
     }
@@ -22,6 +23,37 @@ var DataService = /** @class */ (function () {
         return this.http.get("/api/products")
             .pipe(map(function (data) {
             _this.products = data;
+            return true;
+        }));
+    };
+    Object.defineProperty(DataService.prototype, "loginRequired", {
+        get: function () {
+            return this.token.length === 0 || this.tokenExpiration < new Date();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DataService.prototype.checkout = function () {
+        var _this = this;
+        if (!this.order.orderNumber) {
+            this.order.orderNumber = this.order.orderDate.getFullYear().toString() +
+                this.order.orderDate.getTime().toString();
+        }
+        return this.http.post("/api/orders", this.order, {
+            headers: new HttpHeaders().set("Authorization", "Bearer " + this.token)
+        })
+            .pipe(map(function (response) {
+            //clear the order or we can also take to another page
+            _this.order = new OrderNS.Order();
+            return true;
+        }));
+    };
+    DataService.prototype.login = function (creds) {
+        var _this = this;
+        return this.http.post("/account/createtoken", creds)
+            .pipe(map(function (data) {
+            _this.token = data.token;
+            _this.tokenExpiration = data.expiration;
             return true;
         }));
     };

@@ -103,6 +103,17 @@ namespace DutchTreatTwo.Data
             .Include(o => o.User)
             .SingleOrDefault(o => o.Id == orderId);
       }
+
+       public void AddOrder(Order newOrder)
+       {
+           //convert new products to lookup of product
+           foreach (var newOrderItem in newOrder.Items)
+           {
+               newOrderItem.Product = _ctx.Products.Find(newOrderItem.Product.Id);
+           }
+
+           AddEntity(newOrder);
+       }
    }
 
    public interface IDutchRepository
@@ -114,5 +125,6 @@ namespace DutchTreatTwo.Data
       void AddEntity(object order);
       IEnumerable<Order> GetAllOrderByUser(string user, bool includeItems);
       Order GetOrderById(string userName, int orderId);
+       void AddOrder(Order newOrder);
    }
 }

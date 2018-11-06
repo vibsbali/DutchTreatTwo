@@ -94,7 +94,7 @@ namespace DutchTreatTwo.Controllers
                var newOrder = _mapper.Map<OrderViewModel, Order>(model);
                newOrder.User = currentUser;
 
-               _dutchRepository.AddEntity(newOrder);
+               _dutchRepository.AddOrder(newOrder);
                if (_dutchRepository.SaveAll())
                {
                   //var vm = new OrderViewModel

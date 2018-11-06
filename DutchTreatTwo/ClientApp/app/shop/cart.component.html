@@ -23,4 +23,5 @@
         </table>
     </div>
     <div>Subtotal: {{ data.order.subtotal }}</div>
-</div>
+</div>                                         
+<a class="btn btn-success" *ngIf="data.order.items.length > 0" (click)="onCheckout()">Checkout</a>

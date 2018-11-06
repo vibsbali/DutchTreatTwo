@@ -1,4 +1,4 @@
-﻿import { HttpClient } from "@angular/common/http";
+﻿import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -12,10 +12,13 @@ export class DataService {
 
   }
 
+  private token: string = "";
+  private tokenExpiration: Date;
+
   public products: Product[] = [];
   public order: OrderNS.Order = new OrderNS.Order();
 
-  loadProducts(): Observable<boolean> {
+  public loadProducts(): Observable<boolean> {
     return this.http.get("/api/products")
       .pipe(
         map((data: any[]) => {
@@ -25,7 +28,39 @@ export class DataService {
       );
   }
 
-  addToOrder(newProduct: Product) {
+  public get loginRequired(): boolean {
+    return this.token.length === 0 || this.tokenExpiration < new Date();
+  }
+
+  public checkout() {
+    if (!this.order.orderNumber) {
+      this.order.orderNumber = this.order.orderDate.getFullYear().toString() +
+        this.order.orderDate.getTime().toString();
+    }
+    return this.http.post("/api/orders", this.order,
+        {
+          headers: new HttpHeaders().set("Authorization", "Bearer " + this.token)
+        })
+      .pipe(
+      map(response => {
+          //clear the order or we can also take to another page
+        this.order = new OrderNS.Order();
+        return true;
+      }));
+  }
+
+  public login(creds: any): Observable<boolean> {
+    return this.http.post("/account/createtoken", creds)
+      .pipe(
+        map((data: any) => {
+          this.token = data.token;
+          this.tokenExpiration = data.expiration;
+          return true;
+        })
+      );
+  }
+
+  public addToOrder(newProduct: Product) {
 
     let item: OrderNS.OrderItem = this.order.items.find(i => i.productId === newProduct.id);
 
@@ -33,7 +68,7 @@ export class DataService {
       item.quantity++;
       return;
     }
-    
+
     item = new OrderNS.OrderItem();
     item.productId = newProduct.id;
     item.productArtist = newProduct.artist;
